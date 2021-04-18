@@ -22,21 +22,8 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(err => {
   console.log(err)
-//   const serviceCollection = client.db("entouchCommunication").collection("service");
+
   console.log('Database Connected')
-
-
-//   app.post('/addService', (req, res) => {
-
-//     const service = req.body;
-//     serviceCollection.insertOne(service)
-//       .then(result => {
-//         res.send(result.insertedCount > 0)
-//       })
-
-
-//   });
-
 
 
 
