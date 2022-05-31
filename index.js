@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
     res.send('Hello World! A11  ')
 })
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.g1ovq.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://jonSmith:jonSmith4321@cluster0.g1ovq.mongodb.net/entouchCommunication?retryWrites=true&w=majority`;
 
 
 
