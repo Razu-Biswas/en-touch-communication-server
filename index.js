@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
     res.send('Hello World! A11  ')
 })
 
-const uri = `mongodb+srv://jonSmith:jonSmith4321@cluster0.g1ovq.mongodb.net/entouchCommunication?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://razuBiswas:razuBiswas1234@cluster0.g1ovq.mongodb.net/entouchCommunication?retryWrites=true&w=majority`;
 
 
 
@@ -29,7 +29,7 @@ client.connect(err => {
 
 
     // admin 
-    const adminsCollection = client.db("entouchCommunication").collection("admin");
+    const adminsCollection = client.db("entouch").collection("admin");
 
     app.get('/addAdmin/:email', async (req, res) => {
         const adminEmail = req.params.email
@@ -41,7 +41,7 @@ client.connect(err => {
 
     //  users Section //
 
-    const usersCollection = client.db("entouchCommunication").collection("users");
+    const usersCollection = client.db("entouch").collection("users");
 
 
     app.get('/allusers', (req, res) => {
@@ -98,7 +98,7 @@ client.connect(err => {
 
 
     //  services Section //
-    const servicesCollection = client.db("entouchCommunication").collection("services");
+    const servicesCollection = client.db("entouch").collection("services");
 
     app.get('/services', (req, res) => {
         servicesCollection.find().toArray((err, items) => {
@@ -135,7 +135,7 @@ client.connect(err => {
     })
     // Order Section    //
 
-    const orderCollection = client.db("entouchCommunication").collection("order");
+    const orderCollection = client.db("entouch").collection("order");
 
     app.post('/saveorder', (req, res) => {
         const newOrder = req.body;
@@ -181,7 +181,7 @@ client.connect(err => {
 
     //  reviews section //
 
-    const reviewsCollection = client.db("entouchCommunication").collection("reviews");
+    const reviewsCollection = client.db("entouch").collection("reviews");
 
     app.get("/getReviews", (req, res) => {
         reviewsCollection.find({}).toArray((err, documents) => {
