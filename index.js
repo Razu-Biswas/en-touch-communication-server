@@ -22,7 +22,7 @@ const uri = `mongodb+srv://razuBiswas:razuBiswas1234@cluster0.g1ovq.mongodb.net/
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(err => {
-    console.log(err)
+    console.log(errgggg)
 
     console.log('Database Connected')
 
