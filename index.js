@@ -12,49 +12,60 @@ const app = express()
 // app.use(cors());
 app.use(cors({ origin: "http://localhost:3000" }))
 app.use(bodyParser.json());
-
-
-
 const uri = "mongodb+srv://db1:4aqXIqZYxht5PQ4P@cluster0.gvvjm.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-
-client.connect(err => {
-    // console.log(errgggg)
-
+async function run(uri){
+    try {
+        let conection  = await client.connect() 
+       let  db  = await conection.db("entouch")
+        
     console.log('Database Connected')
 
 
 
     // admin 
-    const adminsCollection = client.db("entouch").collection("admin");
+    const adminsCollection = await db.collection("admin");
 
     app.get('/addAdmin/:email', async (req, res) => {
+     try {
         const adminEmail = req.params.email
         const adminCreated = await adminsCollection.insertOne({ adminEmail });
         if (adminCreated.insertedCount > 0) {
             res.send(adminCreated.ops[0])
         }
+     } catch (error) {
+        res.send(error)
+     }
     })
 
     //  users Section //
 
-    const usersCollection = client.db("entouch").collection("users");
+    const usersCollection = await db.collection("users");
 
 
-    app.get('/allusers', (req, res) => {
+    app.get('/allusers', async (req, res) => {
+       try {
         usersCollection.find().toArray((err, items) => {
             res.send([...items]);
         });
+       } catch (error) {
+        res.send(error);
+       }
     });
 
     app.get('/makeAdmin/:email', async (req, res) => {
+       try {
         const email = req.params.email
         console.log(email)
         const data = await usersCollection.updateOne({ "email": email }, { $set: { "role": 'admin' } });
         res.send({ message: 'update Successfully' })
+       } catch (error) {
+        res.send(error)
+       }
     });
 
     app.post('/addUser', async (req, res) => {
+       try {
         const user = req.body;
         const { email } = user;
         usersCollection.findOne({ email }, (err, data) => {
@@ -90,27 +101,39 @@ client.connect(err => {
                     })
             }
         })
+       } catch (error) {
+        res.send(error)
+       }
 
     })
 
 
     //  services Section //
-    const servicesCollection = client.db("entouch").collection("services");
+    const servicesCollection = await db.collection("services");
 
-    app.get('/services', (req, res) => {
+    app.get('/services', async (req, res) => {
+       try {
         servicesCollection.find().toArray((err, items) => {
             res.send([...items]);
         });
+       } catch (error) {
+        res.send(error)
+       }
     });
 
-    app.get('/checkout/:id', (req, res) => {
+    app.get('/checkout/:id', async(req, res) => {
+       try {
         const id = new ObjectId(req.params.id);
         servicesCollection.find({ _id: id }).toArray((err, items) => {
             res.send(items);
         });
+       } catch (error) {
+        res.send(error)
+       }
     });
 
-    app.post('/addServices', (req, res) => {
+    app.post('/addServices', async(req, res) => {
+       try {
         const newServices = req.body;
         console.log(newServices);
         servicesCollection.insertOne(newServices)
@@ -118,10 +141,14 @@ client.connect(err => {
                 console.log('inserted count', result.insertedCount);
                 res.send(result.insertedCount > 0);
             })
+       } catch (error) {
+        res.send(error)
+       }
     })
 
     // Delete Services
     app.get('/deleteService/:id', async (req, res) => {
+      try {
         const id = new ObjectId(req.params.id);
         console.log(id)
         const deleteService = await servicesCollection.deleteOne({ _id: id });
@@ -129,12 +156,16 @@ client.connect(err => {
         if (deleteService.deletedCount > 0) {
             res.send({ message: 'Delete Successfully' })
         }
+      } catch (error) {
+        res.send(error)
+      }
     })
     // Order Section    //
 
-    const orderCollection = client.db("entouch").collection("order");
+    const orderCollection = await db.collection("order");
 
-    app.post('/saveorder', (req, res) => {
+    app.post('/saveorder', async(req, res) => {
+      try {
         const newOrder = req.body;
         console.log(newOrder);
         orderCollection.insertOne(newOrder).then((result) => {
@@ -143,22 +174,33 @@ client.connect(err => {
                 res.status(200).json(result);
             }
         });
+      } catch (error) {
+        res.send(error)
+      }
     });
 
-    app.get("/getOrders", (req, res) => {
+    app.get("/getOrders", async(req, res) => {
 
+       try {
         orderCollection.find({}).toArray((err, documents) => {
             res.send(documents);
         });
+       } catch (error) {
+        res.send(error)
+       }
     });
 
 
     // 
-    app.get("/orderByEmail/:email", (req, res) => {
+    app.get("/orderByEmail/:email", async(req, res) => {
+       try {
         const email = req.params.email
         orderCollection.find({ email: email }).toArray((err, documents) => {
             res.send(documents);
         });
+       } catch (error) {
+        res.send(error)
+       }
     });
 
     // update order status 
@@ -178,34 +220,56 @@ client.connect(err => {
 
     //  reviews section //
 
-    const reviewsCollection = client.db("entouch").collection("reviews");
+    const reviewsCollection = await db.collection("reviews");
 
-    app.get("/getReviews", (req, res) => {
+    app.get("/getReviews", async (req, res) => {
+      try {
         reviewsCollection.find({}).toArray((err, documents) => {
             res.send(documents);
         });
+      } catch (error) {
+        res.send(error)
+      }
     });
 
-    app.post("/addReviews", (req, res) => {
+    app.post("/addReviews", async(req, res) => {
+     try {
         const field = req.body;
         reviewsCollection.insertMany(field).then(result => {
             res.send(result);
             console.log(result.insertedCount);
         });
+     } catch (error) {
+        res.send(error)
+     }
     });
 
-    app.post("/addSingleReview", (req, res) => {
+    app.post("/addSingleReview", async(req, res) => {
+       try {
         const NewReview = req.body;
         reviewsCollection.insertOne(NewReview).then(result => {
             res.send(result.ops[0]);
         });
+       } catch (error) {
+        res.send(error)
+       }
     });
+        
+    } catch (error) {
+console.log(error)
+    }
+}
+
+
+// client.connect(err => {
+
+run()
 
 
 
 
 
-});
+// });
 
 
 app.get('/', (req, res) => {
