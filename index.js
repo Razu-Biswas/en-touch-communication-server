@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000
 
 const app = express()
 // app.use(cors());
-app.use(cors({ origin: "http://localhost:3000" }))
+app.use(cors({ origin: "https://entouch-communication.web.app" }))
 app.use(bodyParser.json());
 const uri = "mongodb+srv://db1:4aqXIqZYxht5PQ4P@cluster0.gvvjm.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
