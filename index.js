@@ -1,28 +1,25 @@
 const express = require('express')
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const MongoClient = require('mongodb').MongoClient;
+
 const ObjectId = require('mongodb').ObjectID;
+const MongoClient = require('mongodb').MongoClient;
 require('dotenv').config();
 
 const port = process.env.PORT || 5000
 
 const app = express()
 // app.use(cors());
-app.use(cors({ origin: "https://entouch-communication.web.app" }))
+app.use(cors({ origin: "http://localhost:3000" }))
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
-    res.send('Hello World! A11  ')
-})
-
-const uri = "mongodb+srv://razuBiswas:razuBiswas1234@cluster0.gvvjm.mongodb.net/?retryWrites=true&w=majority";
 
 
-
+const uri = "mongodb+srv://db1:4aqXIqZYxht5PQ4P@cluster0.gvvjm.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
 client.connect(err => {
-    console.log(errgggg)
+    // console.log(errgggg)
 
     console.log('Database Connected')
 
@@ -211,5 +208,7 @@ client.connect(err => {
 });
 
 
-
+app.get('/', (req, res) => {
+    res.send('Hello World! A11  ')
+})
 app.listen(process.env.PORT || port)
